@@ -1,9 +1,12 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import errno
 import os
 import nfc
+import os
+import errno
+import hid
 
 app = Flask(__name__)
 
@@ -11,8 +14,14 @@ app = Flask(__name__)
 scope = ['https://spreadsheets.google.com/feeds',
       'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
-#client = gspread.authorize(credentials)
-#sheet = client.open('YourGoogleSheetName').sheet1  # Replace 'YourGoogleSheetName' with your actual sheet name
+client = gspread.authorize(credentials)
+sheet = client.open('Patient_Dataset').sheet1  # Replace 'Patient_Dataset' with your actual sheet name
+
+# HID Omnikey 5321 V2 device setup
+vendor_id = 0x076b
+product_id = 0x5321
+device = hid.device()
+device.open(vendor_id, product_id)
 
 @app.route('/')
 def index():
@@ -52,11 +61,19 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
 def read_nfc():
     nfc_data = read_nfc_data()
     if nfc_data:
-        # Store NFC data in Google Sheets
-        store_data_in_google_sheets(nfc_data)
-        return "NFC Data Read: {}".format(nfc_data)
-    else:
-        return "No NFC Card Detected"
+        patient_data = fetch_patient_data(nfc_data)
+        if patient_data:
+            return render_template('patient_info.html', data=patient_data)
+    return "No NFC Data Found"
+
+@app.route('/fetch_data_manually', methods=['POST'])
+def fetch_data_manually():
+    patient_id = request.form['patient_id']
+    if patient_id:
+        patient_data = fetch_patient_data(patient_id)
+        if patient_data:
+            return render_template('patient_info.html', data=patient_data)
+    return "No Data Found for Provided ID"
 
 def read_nfc_data():
     print("Waiting for NFC card...")
