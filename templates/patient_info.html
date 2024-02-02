@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Patient Information</h1>
+    <div>
+        <p><strong>Name:</strong> {{ data[0] }}</p>
+        <p><strong>Age:</strong> {{ data[1] }}</p>
+        <p><strong>Gender:</strong> {{ data[2] }}</p>
+        <p><strong>Diagnosis:</strong> {{ data[3] }}</p>
+        <!-- Add more patient data fields as needed -->
+    </div>
+</body>
+</html>
