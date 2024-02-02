@@ -1,14 +1,14 @@
 from flask import Flask, render_template
-import nfc
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import nfc
 
 app = Flask(__name__)
 
 # Google Sheets setup
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
 client = gspread.authorize(credentials)
 sheet = client.open('YourGoogleSheetName').sheet1  # Replace 'YourGoogleSheetName' with your actual sheet name
 
@@ -27,13 +27,11 @@ def read_nfc():
         return "No NFC Card Detected"
 
 def read_nfc_data():
-    # Implement code to read NFC data using nfcpy
-    # Example:
-    # with nfc.ContactlessFrontend('usb') as clf:
-    #     tag = clf.connect(rdwr={'on-connect': lambda tag: False})
-    #     data = tag.identifier.hex()
-    #     return data
-    pass
+    with nfc.ContactlessFrontend('usb') as clf:
+        print("Waiting for NFC tag...")
+        tag = clf.connect(rdwr={'on-connect': lambda tag: False})
+        data = tag.identifier.hex()
+        return data
 
 def store_data_in_google_sheets(data):
     # Store data in Google Sheets
