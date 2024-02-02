@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import nfc
+import nfcpy
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Google Sheets setup
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
 client = gspread.authorize(credentials)
 sheet = client.open('YourGoogleSheetName').sheet1  # Replace 'YourGoogleSheetName' with your actual sheet name
 
