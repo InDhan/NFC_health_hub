@@ -1,0 +1,19 @@
+import sqlite3
+
+def create_database():
+    # Connect to SQLite database (creates new file if not exists)
+    conn = sqlite3.connect('health_data.db')
+
+    # Create a cursor object to execute SQL queries
+    c = conn.cursor()
+
+    # Create table if not exists
+    c.execute('''CREATE TABLE IF NOT EXISTS health_data
+                (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, data TEXT)''')
+
+    # Commit changes and close connection
+    conn.commit()
+    conn.close()
+
+# Call the function to create the database
+create_database()

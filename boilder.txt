@@ -1,0 +1,12 @@
+python -m venv venv
+pip install virtualenv
+venv\Scripts\activate
+////////////////////////////////////
+bypass it 
+///////////////////////////////////
+Set-ExecutionPolicy Bypass -Scope Process
+.\venv\Scripts\Activate
+--------------------------------------
+//////////////////////////////////
+pip install Flask python-hid
+
