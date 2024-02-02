@@ -10,7 +10,7 @@ scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
 client = gspread.authorize(credentials)
-sheet = client.open('YourGoogleSheetName').sheet1  # Replace 'YourGoogleSheetName' with your actual sheet name
+sheet = client.open('Patient_Dataset').sheet1  # Replace 'YourGoogleSheetName' with your actual sheet name
 
 @app.route('/')
 def index():

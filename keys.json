@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "minor-project-clinic",
+  "private_key_id": "a080c723410dcbe5f01a99e8cb8b20de0f0df1e2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC9fMJehz7onB77\nfKs01ws4A3hl2qCU3vZ91Ha9IB+efIPcQiU5FqMfy0/mjP92nK0Z1pI7h7kkwz+E\nFcfKEhr8EIX87UASZR48h2oQXNd1yjK2lrn1wmFMcDMLFeCDXkKd46ghNBg3IA6C\nRgxxoeylhuqn8B1yGoq5kNR8QOPhHTzfDdIZFpV2gQYlyfxsD5QDFj/rJhsPr0od\n+CuCDuh3s2GCLZVJAlFd59d7i3ev4z/stPiKecPISUgOjlpC3Hj+UVW5xvIAz4j5\n6CihSXRzLKfIqc42nGiXtCDO1RlKZagGKoQ/To4JubNTWP8CRCEiKvqB7SmNaalF\nSBrLqzpBAgMBAAECggEAAi4+wDl9z028+1+DircW/2umeFlFdpJ2eKYoASnEL2Mx\nsx3VlumkUjFOlQxw7q+jfCwDMLlGwk4XFlPYAc1xnyO+ClYnzKZlAbo8YwiR0rP+\nCipOeiNvkk0qwIvdh/QptQPfEMBsRGsje5s8hAIX6qOUjP73NHOq08ifcg10Segy\ns1/jOqMWcL3hCsK/i34/fUVx1jOpYzoI3UuWagpBMKPuyCHq7sajaLam9sf3qH0F\nVBlmW9Vd9QXZyYZKVBWGkDOznLWNqFa4L8PygYfTBLbyp9SVE4PzckYPe433rNM3\nr6hFUxbqBS654esR3FtxhpgBFk41zBrkFor4AzdOoQKBgQDjs7R1Bfr/CtSvlyXF\ndaI3bhMhOaFmBL4JCKIFWUppfqjlW7YmjL7H0gG5yPD5nXO7W6U9x17KOVr8LHGC\n3ufHekee9cwQWeJjp9fWljBOVeuxx3gvoKgQg+BGTAaZWaBrq64F0TWYYuXYpdXq\nTi1X2VcDCJK3+QppgZxvY+aasQKBgQDVCUNZs0Rn5/OFl2HaBMSEE5ldhdwi5mU1\nfMP0MQ319s6haKE+ubGpXJWY1X0qqIP5WJFrdGFZoDGcNvGLGqHWQJ0lS0VjjGhk\nasESHGj/PIj6YR1mCaXkdDkWBwuTWB7a85yP2EzTnpHBtYTaX/LnMroGGxM2rkKk\nqvjUD1ZckQKBgQCbytClYLoi1h4/JYNKXvnmQwIDsZKkYopDVAzG7BjlpSuaAe3W\n4mWGAkH8A2gc4YXVoxaj9kz8v9FoyF/B0xFygk+Oi05bwaQL20LqJ0hV0KO6t2eb\n7qgO5KwGbO327kO8Z3JhuIqbAM+SM6Tw8xxDBwlpoewAw/xDw9JsxEV7gQKBgDwg\ndireBuOQutGsrUh8af6hDXsw6bXL8yrKgP/tzHPsadtyjXgHrxYO9IYDU2Vz1HPO\nxJRgb419QiNF+px5Ms4mxHOfMAFtwpT88GstK5FGQ57vQ/3loTW+e9I0wNagW20O\nrtSGhwB/U8IpekqsJAGO9qP8hkq7mkGho8MuZQCRAoGBAJbvebL9+X4UTF33R+34\n0BlFzFJCJSoMpWzr4mwmLyV/qrRjNd/iSnv2WvReTZDYGtBSlUvREuTDCR/TGfn1\n1TETVPcY2MdYUYe/FR083VWUWJiqJWiiXl0mrdMtORjwvMBl8mOG1SQUo9HGyHDn\nu2TiCv7GWO96Ie2V6ZCjAr/D\n-----END PRIVATE KEY-----\n",
+  "client_email": "murtaza@minor-project-clinic.iam.gserviceaccount.com",
+  "client_id": "117573202945283447406",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/murtaza%40minor-project-clinic.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
