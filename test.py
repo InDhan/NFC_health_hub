@@ -15,7 +15,7 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
 
         # Find the cell containing the patient ID
         cell = sheet.find(patient_id)
-
+ 
         if cell:
             # Get the row and column of the cell
             row_index = cell.row
@@ -72,3 +72,4 @@ if __name__ == "__main__":
             print("Patient ID not found or error occurred.")
     else:
         print("No patient ID detected.")
+  
