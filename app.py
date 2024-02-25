@@ -15,10 +15,11 @@ def index():
 
 @app.route('/fetch_data_manually', methods=['POST'])
 
-def run():
+def test():
     pass
 
 if __name__ == '__main__':
+    connection = read_rfid()
     # Read patient ID from RFID card
     patient_id_bytes = read_rfid_data()
     if patient_id_bytes is None:

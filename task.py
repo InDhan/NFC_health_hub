@@ -1,9 +1,10 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import pyrfid  # Import the appropriate RFID library
+import pyrfid   
+import nfc 
+# Import the appropriate RFID library
 import os
 import errno
-
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
@@ -56,3 +57,8 @@ def store_data_in_google_sheets(data):
     # Store data in Google Sheets
     row = [data]  # Assuming data is a single value, modify as needed
     # sheet.append_row(row)
+
+def check_attr():
+    attribute = dir(pyrfid)
+    print(attribute)
+
