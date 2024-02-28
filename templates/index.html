@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NFC Health App</title>
+    <title>NFC Health Hub</title>
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body>
-    <h1>NFC Health App</h1>
-    <p>Click below to read NFC data:</p>
-    <a href="/read_nfc">Read NFC Data</a>
+<body style="background-color: #fefbf6;">
+    <header id="header" class="header-scrolled" style="text-align: center;">
+        <div class="logo">
+            <h1><a href="#">NFC Health Hub</a></h1>
+        </div>
+    </header>
+
+    <section id="login">
+        
+        <form>
+            <div>
+                <img src="assets/img/SGSITS.png" alt="logo for sgsits">
+                <h1>Login</h1>
+                <input type="text" id="userID" name="userID" placeholder="User ID">
+            </div>
+            <div>
+                <input type="password" id="password" name="password" placeholder="Password">
+            </div>
+            <br>
+            <button class="btn-get-started">Login</button>
+        </form>
+        <!-- <div class="login-img">
+            <img src="assets/img/login-image.jpg" alt="login image"> 
+        </div> -->
+    </section>
+
+    <section id="login_id">
+        <!-- Your content here -->
+    </section>
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" style="text-align: center;">
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza , Utkarsh Jyotishi</strong>.
+                All Rights Reserved
+            </div>
+            <div class="credits">
+                Designed For <a href="#jdm/JDM.html"><strong>Minor Project</strong></a>
+            </div>
+        </div>
+    </footer><!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
 </body>
 </html>
