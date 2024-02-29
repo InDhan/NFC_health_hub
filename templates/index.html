@@ -2,40 +2,36 @@
 <html>
 <head>
     <title>NFC Health Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body style="background-color: #fefbf6;">
-    <header id="header" class="header-scrolled" style="text-align: center;">
+<body>
+    <header id="header" class="header-scrolled">
         <div class="logo">
             <h1><a href="#">NFC Health Hub</a></h1>
         </div>
     </header>
 
     <section id="login">
-        
-        <form>
+        <form id="loginForm" action="/login" method="post">
             <div>
-                <img src="assets/img/SGSITS.png" alt="logo for sgsits">
-                <h1>Login</h1>
-                <input type="text" id="userID" name="userID" placeholder="User ID">
+                <h3><img src="assets/img/SGSITS.png" alt="logo for sgsits" style="width: 100px;">
+                <br>Shri Govindram Seksaria Institute of Technology and Science</h3>
+            <h2>Login</h2>
             </div>
             <div>
-                <input type="password" id="password" name="password" placeholder="Password">
+                <input type="text" id="username" name="username" placeholder="User ID" required>
+                <br>
+                <input type="password" id="password" name="password" placeholder="Password" required>
             </div>
             <br>
-            <button class="btn-get-started">Login</button>
+            <button class="btn-get-started" type="submit">Login</button>
         </form>
-        <!-- <div class="login-img">
-            <img src="assets/img/login-image.jpg" alt="login image"> 
-        </div> -->
-    </section>
 
-    <section id="login_id">
-        <!-- Your content here -->
     </section>
 
     <!-- ======= Footer ======= -->
-    <footer id="footer" style="text-align: center;">
+    <footer id="footer">
         <div class="container">
             <div class="copyright">
                 &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza , Utkarsh Jyotishi</strong>.
