@@ -45,11 +45,11 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
 def read_nfc_data():
     print("Waiting for NFC card...")
     try:
-        with nfcpy.ContactlessFrontend('usb') as clf:
+        with nfc.ContactlessFrontend('usb') as clf:
             tag = clf.connect(rdwr={'on-connect': lambda tag: tag})
             data = tag.ndef.message.pretty()
             return data
-    except nfcpy.clf.UnsupportedTargetError:
+    except nfc.clf.UnsupportedTargetError:
         print("NFC reader is not connected.")
         return None
 

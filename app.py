@@ -1,26 +1,29 @@
-from flask import Flask, render_template, request, jsonify
-import subprocess
+from flask import Flask, render_template, request, redirect, url_for
+from templates.assets.logic.login import authenticate_user
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='templates/assets', static_url_path='/assets')
 
-@app.route("/")
-def login_page():
-    return render_template("index.html")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-@app.route("/login", methods=["POST"])
-def login():
-    username = request.form.get("username")
-    password = request.form.get("password")
 
-    # Call the login script with subprocess
-    result = subprocess.run(["python", "assets/js/login.py", username, password], capture_output=True, text=True)
-
-    if result.returncode == 0:
-        # Login successful
-        return jsonify({"success": True}), 200
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    if request.method == 'POST' and authenticate_user(request.form['username'], request.form['password']):
+        return render_template('dashboard.html')
     else:
-        # Login failed
-        return jsonify({"success": False}), 401
+        return redirect(url_for('login_page'))
 
-if __name__ == "__main__":
+@app.route('/login', methods=['GET', 'POST'])
+def login_page():
+    if request.method == 'POST':
+        if authenticate_user(request.form['username'], request.form['password']):
+           return render_template('dashboard.html')
+        else:
+            return render_template('index.html', error="Invalid credentials. Please try again.")
+    else:
+        return render_template('index.html')
+
+if __name__ == '__main__':
     app.run(debug=True)

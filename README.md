@@ -1,9 +1,15 @@
-# NFC_health_hub
-project_folder/
+NFC_health_hub/
 │
-├── assets/
-│   └── index.html    <-- Main login HTML file
-│   └── js/
-│       └── login.py  <-- Python file for login handling
+├── templates/
+│   ├── index.html
+│   ├── dashboard.html
+│   ├── patient_info.html
+│   └── assets/
+│       ├── css/
+│       │   └── style.css
+│       └── logic/
+│           └── login.py
 │
-└── app.py            <-- Main Python file (Flask app)
+├── task.py
+└── app.py
+
