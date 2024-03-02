@@ -1,5 +1,6 @@
 # Ignore Python virtual environment
 venv/
+NFCreader/
 
 # Ignore IDE or editor specific files
 .vscode/

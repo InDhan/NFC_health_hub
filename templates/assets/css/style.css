@@ -1,0 +1,149 @@
+/* Body Styles */
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #444444;
+  background-color: #fefbf6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header Styles */
+#header {
+  z-index: 997;
+  transition: all 0.5s;
+  padding: 20px 0;
+  background: #92c7cf;
+  text-align: center;
+  margin-bottom: 20px; /* Add margin bottom to separate header from content */
+}
+
+#header.header-scrolled {
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+#header .logo h1 {
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: "Eras ITC";
+}
+
+#header .logo h1 a,
+#header .logo h1 a:hover {
+  color: #222222;
+  text-decoration: none;
+}
+
+#header .logo img {
+  padding: 0;
+  margin: 0;
+  max-height: 40px;
+}
+
+/* Login Section Styles */
+#login {
+    width: 100%;
+    height: 70vh;
+    margin-top: 70px;
+    text-align: center;
+}
+
+#login h2 {
+    color: #484848;
+    margin-bottom: 50px;
+    font-size: 24px;
+}
+
+#login input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#login .btn-get-started {
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 10px 30px;
+    border-radius: 50px;
+    transition: 0.5s;
+    color: #000000;
+    border: 2px solid #92c7cf;
+}
+
+#login .btn-get-started:hover {
+    background: #FFB200;
+    color: #fff;
+}
+
+/* Footer Styles */
+#footer {
+  background: #fff;
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+  color: #222222;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px; /* Add margin top to separate footer from content */
+}
+
+#footer .copyright {
+  font-size: 13px;
+  padding-top: 5px;
+}
+
+#footer .credits {
+  font-size: 13px;
+  padding-top: 5px;
+  color: #222222;
+}
+
+#footer .footer-links a {
+  color: #222222;
+  padding-left: 15px;
+}
+
+#footer .footer-links a:first-child {
+  padding-left: 0;
+}
+
+#footer .footer-links a:hover {
+  color: #FFB200;
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  visibility: hidden;
+  opacity: 0;
+  right: 15px;
+  bottom: 15px;
+  z-index: 996;
+  background: #FFB200;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  transition: all 0.4s;
+}
+
+.back-to-top i {
+  font-size: 28px;
+  color: #fff;
+  line-height: 0;
+}
+
+.back-to-top:hover {
+  background: rgb(0, 0, 0);
+  color: #fff;
+}
+
+.back-to-top.active {
+  visibility: visible;
+  opacity: 1;
+}

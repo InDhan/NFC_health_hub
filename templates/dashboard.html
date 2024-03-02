@@ -1,36 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NFC Health Hub</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <title>Dashboard - NFC Health Hub</title>
+    <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
     <header id="header" class="header-scrolled">
         <div class="logo">
             <h1><a href="#">NFC Health Hub</a></h1>
         </div>
+        <!-- Add any additional header content here -->
     </header>
 
-    <section id="login">
-        <form id="loginForm" action="/login" method="post">
-            <div>
-                <h3><img src="assets/img/SGSITS.png" alt="logo for sgsits" style="width: 100px;">
-                <br>Shri Govindram Seksaria Institute of Technology and Science</h3>
-                <h2>Login</h2>
-            </div>
-            <div>
-                <input type="text" id="username" name="username" placeholder="Username" required>
-                <br>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-            </div>
-            <br>
-            <button class="btn-get-started" type="submit">Login</button>
-        </form>
-        {% if error %}
-    <div class="error">{{ error }}</div>
-    {% endif %}
-
+    <section id="dashboard">
+        <h2>Welcome to the Dashboard</h2>
+        <!-- Add any dashboard content here -->
     </section>
 
     <!-- ======= Footer ======= -->
@@ -49,5 +35,6 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 
+    <!-- Add any additional scripts here -->
 </body>
 </html>
