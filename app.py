@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 from templates.assets.logic.login import authenticate_user
+from fetch_data import fetch_patient_data
+from rfid import read_rfid,write_rfid
 
 app = Flask(__name__, static_folder='templates/assets', static_url_path='/assets')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -27,3 +29,6 @@ def login_page():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    patient_id = read_rfid()
+    
+
