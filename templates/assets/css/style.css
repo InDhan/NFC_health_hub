@@ -147,3 +147,35 @@ body {
   visibility: visible;
   opacity: 1;
 }
+
+/* dashboard */
+#dashboard{
+  text-align: center;
+  width: 100%;
+    height: 70vh;
+    margin-top: 70px;
+    text-align: center;
+}
+
+#dashboard .rfid{
+  animation-delay:1s;
+  text-align: center;
+}
+
+#dashboard .btn-get-started {
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 50px;
+  transition: 0.5s;
+  color: #000000;
+  border: 2px solid #92c7cf;
+}
+
+#dashboard .btn-get-started:hover {
+  background: #FFB200;
+  color: #fff;
+}
