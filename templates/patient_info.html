@@ -3,17 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Information</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard - NFC Health Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
-    <h1>Patient Information</h1>
-    <div>
-        <p><strong>Name:</strong> {{ data[0] }}</p>
-        <p><strong>Age:</strong> {{ data[1] }}</p>
-        <p><strong>Gender:</strong> {{ data[2] }}</p>
-        <p><strong>Diagnosis:</strong> {{ data[3] }}</p>
-        <!-- Add more patient data fields as needed -->
-    </div>
+    <header id="header" class="header-scrolled">
+        <div class="logo">
+            <h1><a href="#">NFC Health Hub</a></h1>
+            <h2></h2>
+        </div>
+    </header>
+
+    <section id="dashboard">
+        <h2>Patient Info</h2>
+        <style>
+            .ss-q-title,
+            .ss-secondary-text {
+                display: none !important;
+            }
+        </style>
+        <!-- Add any dashboard content here -->
+    </section>
+    <section style="text-align: center;">
+        <input type="text" id="patient_id" name="Patient ID" placeholder="Patient ID" required>
+    </section>
+
+    <!-- ======= Footer ======= -->
+    <!-- <section>
+    <footer id="footer">
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza , Utkarsh Jyotishi</strong>.
+                All Rights Reserved
+            </div>
+            <div class="credits">
+                Designed For <a href="#jdm/JDM.html"><strong>Minor Project</strong></a>
+            </div> -->
+        <!-- </div>
+    </footer>
+    </section>  -->
+    <!-- End Footer -->
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 </body>
 </html>

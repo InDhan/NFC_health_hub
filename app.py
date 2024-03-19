@@ -35,5 +35,9 @@ def login_page():
 def add_patient():
     return render_template('add_patient.html')
 
+@app.route('/patient_info')
+def patient_info():
+    return render_template('Patient_info.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
