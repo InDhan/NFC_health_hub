@@ -1,7 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import time
-import nfc
+from rfid import read_data,write_data
 
 def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
     try:
@@ -42,22 +42,15 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
         print(f"Error: {e}")
         return None
 
-def read_nfc_data():
-    print("Waiting for NFC card...")
-    try:
-        with nfc.ContactlessFrontend('usb') as clf:
-            tag = clf.connect(rdwr={'on-connect': lambda tag: tag})
-            data = tag.ndef.message.pretty()
-            return data
-    except nfc.clf.UnsupportedTargetError:
-        print("NFC reader is not connected.")
-        return None
-
 if __name__ == "__main__":
     credentials_file = 'keys.json'  
     spreadsheet_id = '1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY'  
 
-    patient_id = input("Enter patient ID manually: ")
+    #patient_id = input("Enter patient ID manually: ")
+
+    patient_id = read_data()
+    print(f'The patient id you provided is {patient_id}')
+
     time.sleep(0)
 
     if patient_id:

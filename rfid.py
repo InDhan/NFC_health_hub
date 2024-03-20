@@ -1,23 +1,22 @@
-from mfrc522 import SimpleMFRC522
+import pandas as pd 
+import serial 
+import time
 
-reader = SimpleMFRC522()
+dataobj = serial.Serial('com3')
+time.sleep(1)
 
-def read_rfid_id():
-    id, text = reader.read()
+def read_data():
+     print("Waiting RFID module for connection............")
+     while True:
+       while (dataobj.in_waiting()==0):
+        pass
+       rfid_text = dataobj.readline()
+       rfid_text = int(patient_id,'int64')
     
-    return id
+     return rfid_text 
 
-def read_rfid_string():
-    id, text = reader.read()
-    return text
+def write_data():
+   pass
 
-def write_rfid():
-    text = str(input("enter the new patient id "))
-    id, text_written = reader.write(text)
-    print(f"ID: {id}")
-    print(f"Text Written succesfully : {text_written}")
-
-if __name__ == '__main__':
-   rfid_id = read_rfid_id()
-   patient_id = read_rfid_string()
-   print(f'your id is at {rfid_id} and your patient_id is {patient_id}')
+patient_id = read_data()
+print(patient_id)

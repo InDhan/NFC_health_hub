@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from templates.assets.logic.login import authenticate_user
 from fetch_data import fetch_patient_data
-from rfid import read_rfid,write_rfid
+from rfid import read_data,write_data
 
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
 
@@ -39,6 +39,7 @@ def add_patient():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    patient_id = read_rfid()
+    patient_id = read_data()
+    print([patient_id])
     
 
