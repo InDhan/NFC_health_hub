@@ -1,17 +1,22 @@
-from mfrc522 import SimpleMFRC522
+import serial
+import time
 
-reader = SimpleMFRC522()
+# Define the serial port and baud rate
+ser = serial.Serial('COM6', 9600)  # Adjust COM port as needed
 
-try:
+def read_rfid():
     while True:
-        # Wait for the RFID tag to be scanned
-        print("Hold a tag near the reader")
-        id, text = reader.read()
+        # Read data from the Arduino
+        data = ser.readline().strip().decode('utf-8')
+        if data:
+            return data
 
-        # Print the ID and data of the scanned tag
-        print("Tag ID: {}".format(id))
-        print("Tag Data: {}".format(text))
-
-finally:
-    # Cleanup the RFID reader
-    GPIO.cleanup()
+if __name__ == '__main__':
+    try:
+        while True:
+            uid = read_rfid()
+            print("RFID Tag UID:", uid)
+            time.sleep(1)  # Delay for readability
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        ser.close()  # Close the serial port

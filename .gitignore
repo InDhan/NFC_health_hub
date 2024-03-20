@@ -1,6 +1,7 @@
 # Ignore Python virtual environment
 venv/
 NFCreader/
+MFRC522-python/
 
 # Ignore IDE or editor specific files
 .vscode/
