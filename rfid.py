@@ -1,30 +1,32 @@
-import pandas as pd 
-import serial 
+import serial.tools.list_ports
 import time
 
-dataobj = serial.Serial('com3')
-time.sleep(1)
+def find_and_open_serial_port():
+    # Get a list of available serial ports
+    ports = serial.tools.list_ports.comports()
 
-def read_data():
-     print("Waiting RFID module for connection............")
-     while True:
-       while (dataobj.in_waiting()==0):
-        pass
-       rfid_text = dataobj.readline()
-       rfid_text = int(patient_id,'int64')
+    # Iterate through the ports to find a suitable one
+    for port in ports:
+        if 'COM' in port.device:  # Adjust this condition as needed for your system
+            try:
+                # Attempt to open the serial port
+                ser = serial.Serial(port.device, 9600)
+                print(f"Opened serial port: {port.device}")
+                return ser
+            except serial.SerialException:
+                continue
     
-     return rfid_text 
+    # Return None if no suitable port is found
+    return None
 
-def write_data():
-   pass
+# Open the serial port using the find_and_open_serial_port() function
+ser = find_and_open_serial_port()
 
-patient_id = read_data()
-print(patient_id)
-import serial
-import time
-
-# Define the serial port and baud rate
-ser = serial.Serial('COM6', 9600)  # Adjust COM port as needed
+# Check if the serial port is successfully opened
+if ser is None:
+    print("Error: No available serial port found!")
+else:
+    print("Serial port opened successfully.")
 
 def read_rfid():
     while True:

@@ -14,7 +14,7 @@
         </div>
     </header>
 
-    <section id="dashboard" >
+    <section id="dashboard">
         <h2>Dashboard</h2>
         <div class="rfid">
             <img src="assets/img/rfid.gif" style="height: 200px; border-radius: 25px;" alt="RFID Card">
@@ -22,17 +22,49 @@
             Tap Patient Card
         </div>
         <br>
+       <!-- RFID Tag UID display -->
+        <div id="rfid-uid">
+            Patient: <span id="rfid-value"></span>
+        </div>
+
+
+        <br>
         <a href="patient_info.html" class="btn-get-started">Prescription</a>
         <a href="add_patient.html" class="btn-get-started">Add Patient</a>
         <!-- Add any dashboard content here -->
     </section>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Function to fetch RFID UID data from the server and update UI
+        function fetchRFIDUID() {
+            $.ajax({
+                url: '/get_rfid_data',  // Flask route to fetch RFID UID data
+                type: 'GET',
+                success: function(data) {
+                    if (data !== null) {
+                        $('#rfid-value').text('' + data);  // Update the RFID Tag UID display
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching RFID UID:', error);
+                }
+            });
+        }
+
+        // Fetch RFID UID data periodically (adjust interval as needed)
+        setInterval(fetchRFIDUID, 1000);  // Update every 1 second
+    });
+</script>
+
+
 
     <!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="container">
             <div class="copyright">
-                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza Sogiyawalaq, Utkarsh Jyotishi</strong>.
+                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza, Utkarsh Jyotishi</strong>.
                 All Rights Reserved
             </div>
         </div>
