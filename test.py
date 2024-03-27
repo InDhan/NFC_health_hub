@@ -1,7 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import time
-from rfid import read_data,write_data
+from rfid import read_rfid
 
 def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
     try:
@@ -15,7 +15,7 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
 
         # Find the cell containing the patient ID
         cell = sheet.find(patient_id)
- 
+
         if cell:
             # Get the row and column of the cell
             row_index = cell.row
@@ -43,12 +43,12 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
         return None
 
 if __name__ == "__main__":
-    credentials_file = 'keys.json'  
-    spreadsheet_id = '1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY'  
+    credentials_file = 'keys.json'
+    spreadsheet_id = '1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY'
 
-    #patient_id = input("Enter patient ID manually: ")
+    patient_id = input("Enter patient ID manually: ")
 
-    patient_id = read_data()
+    #patient_id = read_data()
     print(f'The patient id you provided is {patient_id}')
 
     time.sleep(0)
@@ -65,4 +65,3 @@ if __name__ == "__main__":
             print("Patient ID not found or error occurred.")
     else:
         print("No patient ID detected.")
-  
