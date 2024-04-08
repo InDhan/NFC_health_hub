@@ -4,7 +4,7 @@ from templates.assets.logic.login import authenticate_user
 import subprocess
 import serial.tools.list_ports
 import time
-
+from prescription import fetch_prescriptions
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
 
 ser = None  # Initialize serial port variable
@@ -88,6 +88,19 @@ def add_patient():
 def patient_info():
     global rfid_uid
     return render_template('Patient_info.html', rfid_uid=rfid_uid)  # Pass rfid_uid to Patient_info.html
+
+@app.route('/')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/prescription', methods=['GET', 'POST'])
+def prescription():
+    if request.method == 'POST':
+        patient_id = request.form['patient_id']
+        prescriptions = fetch_prescriptions(patient_id)
+        return render_template('prescription.html', prescriptions=prescriptions, patient_id=patient_id)
+    else:
+        return render_template('prescription.html')
 
 if __name__ == '__main__':
     start_rfid_thread()  # Start the RFID reading thread

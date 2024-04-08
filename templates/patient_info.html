@@ -9,7 +9,22 @@
     <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
-    <header id="header" class="header-scrolled">
+    <h1>Prescription</h1>
+    <form action="/prescription" method="post">
+        <label for="patient_id">Enter Patient ID:</label>
+        <input type="text" id="patient_id" name="patient_id" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if prescriptions %}
+        <h2>Prescriptions for Patient ID: {{ patient_id }}</h2>
+        <ul>
+            {% for prescription in prescriptions %}
+                <li>{{ prescription }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!--header id="header" class="header-scrolled">
         <div class="logo">
             <h1><a href="#">NFC Health Hub</a></h1>
             <h2></h2>
@@ -25,10 +40,12 @@
             }
         </style>
         <!-- Add any dashboard content here -->
-    </section>
+    <!--/section>
     <section style="text-align: center;">
         <input type="text" id="patient_id" name="Patient ID" placeholder="Patient ID" required>
-    </section>
+    <!--/section>
+
+    
 
     <!-- ======= Footer ======= -->
     <!-- <section>
