@@ -19,7 +19,21 @@
                 <br>Shri Govindram Seksaria Institute of Technology and Science<br>
                 Department of Biomedical Engineering</h3>
             </div>
-            <a href="login.html" type="button">Login</a>
+            <div>
+                <p>Login</p>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <br>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <br>
+                <button class="btn-get-started" type="submit">Login</button>
+            </div>
+            
+        </form>
+        {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    </section>
+    
     <!-- ======= Footer ======= -->
     <section>
     <footer id="footer">

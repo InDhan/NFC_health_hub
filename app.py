@@ -1,18 +1,21 @@
 import threading
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from templates.assets.logic.login import authenticate_user
-import subprocess
 import serial.tools.list_ports
 import time
+from templates.assets.logic.login import authenticate_user
 from flask_socketio import SocketIO
 
+# Initialize Flask app and SocketIO
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
-
-ser = None  # Initialize serial port variable
-rfid_uid = None  # Initialize RFID UID variable
 socketio = SocketIO(app)
 
+# Global variables
+ser = None  # Serial port variable
+rfid_uid = None  # RFID UID variable
+prev_rfid_uid = None  # Previous RFID UID variable
+
 def find_and_open_serial_port():
+    global ser
     # Get a list of available serial ports
     ports = serial.tools.list_ports.comports()
 
@@ -36,10 +39,16 @@ def read_rfid():
         if ser is not None and ser.is_open:
             # Read data from the Arduino
             data = ser.readline().strip().decode('utf-8')
-            if data:
-                rfid_uid = data
+            if data.startswith('Patient RFID: Card UID:'):
+                rfid_uid = data.split(': ')[-1].strip()  # Extract the RFID UID from the data
                 print("Patient RFID:", rfid_uid)
         time.sleep(0.1)  # Adjust delay as needed
+
+@socketio.on('rfid_data')
+def handle_rfid_data(data):
+    global rfid_uid
+    rfid_uid = data['tag_uid']  # Assuming 'tag_uid' is the key for RFID UID in the data
+    socketio.emit('rfid_update', {'tag_uid': rfid_uid})
 
 def start_rfid_thread():
     global ser
@@ -52,38 +61,31 @@ def start_rfid_thread():
         rfid_thread = threading.Thread(target=read_rfid)
         rfid_thread.daemon = True
         rfid_thread.start()
+        print("RFID thread started.")  # Debug print
 
-# Variable to store the previous RFID UID
-prev_rfid_uid = None
-
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
-    global rfid_uid
+    # Handle login form submission
     if request.method == 'POST':
+        # Add your login authentication logic here
         if authenticate_user(request.form['username'], request.form['password']):
-            return render_template('dashboard.html', rfid_tag="RFID Tag UID:", rfid_value=rfid_uid)  # Pass rfid_uid to dashboard.html
+            return redirect(url_for('dashboard'))  # Redirect to dashboard on successful login
         else:
-            return render_template('index.html', error="Invalid credentials. Please try again.")
+            return render_template('login.html', error="Invalid credentials. Please try again.")
     else:
-        return render_template('index.html')
-    
-# def get_rfid_data():
-#     global prev_rfid_uid, rfid_uid
-#     if rfid_uid != prev_rfid_uid:  # Check if the RFID UID has changed
-#         prev_rfid_uid = rfid_uid  # Update the previous RFID UID
-#         return jsonify(str(rfid_uid))  # Convert the RFID UID to a string and return
-#     else:
-#         return jsonify(None)  # Return None if the RFID UID has not changed 
+        return render_template('login.html')
 
-# def rfid_display():
-#     tag_uid = get_rfid_data()
-#     return render_template('index.html', tag_uid=tag_uid)
+@app.route('/dashboard')
+def dashboard():
+    global rfid_uid
+    return render_template('dashboard.html', rfid_tag="RFID Tag UID:", rfid_value=rfid_uid)
 
+# API endpoint to fetch RFID data
 @app.route('/get_rfid_data', methods=['GET'])
 def get_rfid_data():
     global prev_rfid_uid, rfid_uid
@@ -93,16 +95,6 @@ def get_rfid_data():
     else:
         return jsonify({"tag_uid": None})
 
-
-@app.route('/add_patient')
-def add_patient():
-    return render_template('add_patient.html')
-
-@app.route('/patient_info')
-def patient_info():
-    global rfid_uid
-    return render_template('Patient_info.html', rfid_uid=rfid_uid)  # Pass rfid_uid to Patient_info.html
-
 if __name__ == '__main__':
     start_rfid_thread()  # Start the RFID reading thread
-    app.run(debug=True)
+    socketio.run(app, debug=True)  # Run the app with SocketIO support
