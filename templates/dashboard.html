@@ -22,42 +22,45 @@
             Tap Patient Card
         </div>
         <br>
-       <!-- RFID Tag UID display -->
-        <div id="rfid-uid">
-            Patient: <span id="rfid-value"></span>
+        <!-- RFID Tag UID display -->
+        <div>
+            <h1>RFID Tag Information</h1>
+            {% if tag_uid %}
+                <p>RFID Tag UID: <span id="rfid-value">{{ rfid_uid }}</span></p>
+            {% else %}
+                <p>No RFID tag detected.</p>
+            {% endif %}
         </div>
-
-
+    
         <br>
         <a href="patient_info.html" class="btn-get-started">Prescription</a>
         <a href="add_patient.html" class="btn-get-started">Add Patient</a>
         <!-- Add any dashboard content here -->
     </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Function to fetch RFID UID data from the server and update UI
-        function fetchRFIDUID() {
-            $.ajax({
-                url: '/get_rfid_data',  // Flask route to fetch RFID UID data
-                type: 'GET',
-                success: function(data) {
-                    if (data !== null) {
-                        $('#rfid-value').text('' + data);  // Update the RFID Tag UID display
+    <script>
+        $(document).ready(function() {
+            // Function to fetch RFID UID data from the server and update UI
+            function fetchRFIDUID() {
+                $.ajax({
+                    url: '/get_rfid_data',  // Flask route to fetch RFID UID data
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.tag_uid !== null) {
+                            $('#rfid-value').text(data.tag_uid);  // Update the RFID Tag UID display
+                        }
+                    },
+                    error: function(error) {
+                        console.log('Error fetching RFID UID:', error);
                     }
-                },
-                error: function(error) {
-                    console.log('Error fetching RFID UID:', error);
-                }
-            });
-        }
-
-        // Fetch RFID UID data periodically (adjust interval as needed)
-        setInterval(fetchRFIDUID, 1000);  // Update every 1 second
-    });
-</script>
-
+                });
+            }
+    
+            // Fetch RFID UID data periodically (adjust interval as needed)
+            setInterval(fetchRFIDUID, 1000);  // Update every 1 second
+        });
+    </script>
+    
 
 
     <!-- ======= Footer ======= -->

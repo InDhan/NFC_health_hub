@@ -4,11 +4,13 @@ from templates.assets.logic.login import authenticate_user
 import subprocess
 import serial.tools.list_ports
 import time
+from flask_socketio import SocketIO
 
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
 
 ser = None  # Initialize serial port variable
 rfid_uid = None  # Initialize RFID UID variable
+socketio = SocketIO(app)
 
 def find_and_open_serial_port():
     # Get a list of available serial ports
@@ -69,15 +71,27 @@ def login_page():
             return render_template('index.html', error="Invalid credentials. Please try again.")
     else:
         return render_template('index.html')
+    
+# def get_rfid_data():
+#     global prev_rfid_uid, rfid_uid
+#     if rfid_uid != prev_rfid_uid:  # Check if the RFID UID has changed
+#         prev_rfid_uid = rfid_uid  # Update the previous RFID UID
+#         return jsonify(str(rfid_uid))  # Convert the RFID UID to a string and return
+#     else:
+#         return jsonify(None)  # Return None if the RFID UID has not changed 
+
+# def rfid_display():
+#     tag_uid = get_rfid_data()
+#     return render_template('index.html', tag_uid=tag_uid)
 
 @app.route('/get_rfid_data', methods=['GET'])
 def get_rfid_data():
     global prev_rfid_uid, rfid_uid
-    if rfid_uid != prev_rfid_uid:  # Check if the RFID UID has changed
-        prev_rfid_uid = rfid_uid  # Update the previous RFID UID
-        return jsonify(str(rfid_uid))  # Convert the RFID UID to a string and return
+    if rfid_uid != prev_rfid_uid:
+        prev_rfid_uid = rfid_uid
+        return jsonify({"tag_uid": str(rfid_uid)})
     else:
-        return jsonify(None)  # Return None if the RFID UID has not changed 
+        return jsonify({"tag_uid": None})
 
 
 @app.route('/add_patient')
