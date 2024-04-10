@@ -1,7 +1,8 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import time
-from rfid import read_rfid
+import threading
+from rfid import rfid_uid
 
 def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
     try:
@@ -42,26 +43,36 @@ def fetch_patient_data(credentials_file, spreadsheet_id, patient_id):
         print(f"Error: {e}")
         return None
 
+def read_rfid_and_fetch_data():
+    global rfid_uid
+    try:
+        while True:
+            if rfid_uid:
+                print("RFID Tag UID:", rfid_uid)
+                # Fetch patient data using the retrieved RFID UID
+                patient_data = fetch_patient_data(credentials_file, spreadsheet_id, rfid_uid)
+                if patient_data:
+                    print("Patient Data:")
+                    for key, value in patient_data.items():
+                        print(f"{key}: {value}")
+                else:
+                    print("Patient ID not found or error occurred.")
+                rfid_uid = None  # Reset RFID UID after processing
+            time.sleep(1)  # Delay for readability
+    except KeyboardInterrupt:
+        print("\nExiting...")
+
 if __name__ == "__main__":
     credentials_file = 'keys.json'
     spreadsheet_id = '1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY'
 
-    patient_id = input("Enter patient ID manually: ")
+    # Start a new thread to read RFID and fetch data simultaneously
+    rfid_thread = threading.Thread(target=read_rfid_and_fetch_data)
+    rfid_thread.daemon = True
+    rfid_thread.start()
 
-    #patient_id = read_data()
-    print(f'The patient id you provided is {patient_id}')
-
-    time.sleep(0)
-
-    if patient_id:
-        print("Patient ID:", patient_id)
-        # Fetch patient data using the retrieved patient ID
-        patient_data = fetch_patient_data(credentials_file, spreadsheet_id, patient_id)
-        if patient_data:
-            print("Patient Data:")
-            for key, value in patient_data.items():
-                print(f"{key}: {value}")
-        else:
-            print("Patient ID not found or error occurred.")
-    else:
-        print("No patient ID detected.")
+    try:
+        while True:
+            time.sleep(1)  # Main thread sleeps while other threads run
+    except KeyboardInterrupt:
+        print("\nExiting...")

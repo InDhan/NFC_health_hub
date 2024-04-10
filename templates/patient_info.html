@@ -9,46 +9,62 @@
     <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
-    <h1>Prescription</h1>
-    <form action="/prescription" method="post">
-        <label for="patient_id">Enter Patient ID:</label>
-        <input type="text" id="patient_id" name="patient_id" required>
-        <input type="submit" value="Submit">
-    </form>
+    <h1>Patient Prescription</h1>
+    <div id="prescription"></div>
+    <input type="text" id="newPrescription" placeholder="Enter new prescription">
+    <button onclick="updatePrescription()">Update Prescription</button>
 
-    {% if prescriptions %}
-        <h2>Prescriptions for Patient ID: {{ patient_id }}</h2>
-        <ul>
-            {% for prescription in prescriptions %}
-                <li>{{ prescription }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <!--header id="header" class="header-scrolled">
-        <div class="logo">
-            <h1><a href="#">NFC Health Hub</a></h1>
-            <h2></h2>
-        </div>
-    </header>
+    <script>
+        function fetchPrescriptionAndUpdate(idValue) {
+            fetch(`/prescriptions?id_value=${idValue}`)
+                .then(response => response.json())
+                .then(data => {
+                    const prescriptionDiv = document.getElementById("prescription");
+                    prescriptionDiv.innerHTML = "";
+                    if (data.prescriptions.length > 0) {
+                        prescriptionDiv.innerHTML = data.prescriptions.join('<br>');
+                    } else {
+                        prescriptionDiv.innerHTML = "No prescription found.";
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
 
-    <section id="dashboard">
-        <h2>Patient Info</h2>
-        <style>
-            .ss-q-title,
-            .ss-secondary-text {
-                display: none !important;
+        function updatePrescription() {
+            const idValue = prompt("Enter Patient ID or UID:");
+            if (idValue) {
+                const newPrescription = document.getElementById("newPrescription").value;
+                if (newPrescription) {
+                    fetch('/update_prescription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id_value: idValue, new_prescription: newPrescription })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) {
+                            alert("Prescription updated successfully!");
+                            fetchPrescriptionAndUpdate(idValue); // Fetch and display updated prescription
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    alert("Please enter a new prescription.");
+                }
             }
-        </style>
-        <!-- Add any dashboard content here -->
-    <!--/section>
-    <section style="text-align: center;">
-        <input type="text" id="patient_id" name="Patient ID" placeholder="Patient ID" required>
-    <!--/section>
+        }
 
-    
-
-    <!-- ======= Footer ======= -->
-    <!-- <section>
+        const idValue = prompt("Enter Patient ID or UID:");
+        if (idValue) {
+            fetchPrescriptionAndUpdate(idValue);
+        }
+    </script>
+   
+   
+    <section>
     <footer id="footer">
         <div class="container">
             <div class="copyright">
@@ -57,11 +73,11 @@
             </div>
             <div class="credits">
                 Designed For <a href="#jdm/JDM.html"><strong>Minor Project</strong></a>
-            </div> -->
+            </div>
         <!-- </div>
     </footer>
     </section>  -->
-    <!-- End Footer -->
+    < End Footer>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 </body>

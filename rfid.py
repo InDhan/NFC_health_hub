@@ -1,7 +1,12 @@
 import serial.tools.list_ports
+import threading
 import time
-previous RFID UIser = None  # Initialize serial port variable
-rfid_uid = None  # Initialize RFID UID variable
+
+# Initialize serial port variable
+ser = None
+
+# Initialize RFID UID variable
+rfid_uid = None
 
 def find_and_open_serial_port():
     # Get a list of available serial ports
@@ -29,7 +34,7 @@ def read_rfid():
             data = ser.readline().strip().decode('utf-8')
             if data:
                 rfid_uid = data
-                print("Patient RFID:", rfid_uid)
+                print("RFID Tag UID:", rfid_uid)
         time.sleep(0.1)  # Adjust delay as needed
 
 def start_rfid_thread():
@@ -44,17 +49,5 @@ def start_rfid_thread():
         rfid_thread.daemon = True
         rfid_thread.start()
 
-# Variable to store theD
-prev_rfid_uid = None
-
-
 if __name__ == '__main__':
     start_rfid_thread()
-    try:
-        while find_and_open_serial_port() != None:
-            uid = read_rfid()
-            print("RFID Tag UID:", uid)
-            time.sleep(1)  # Delay for readability
-    except KeyboardInterrupt:
-        print("\nExiting...")
-        ser.close()  # Close the serial port
