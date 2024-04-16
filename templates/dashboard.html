@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - NFC Health Hub</title>
     <link href="assets/css/style.css" rel="stylesheet">
-    <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
     <header id="header" class="header-scrolled">
@@ -25,43 +24,34 @@
         <!-- RFID Tag UID display -->
         <div>
             <h1>RFID Tag Information</h1>
-            {% if tag_uid %}
-                <p>RFID Tag UID: <span id="rfid-value">{{ rfid_uid }}</span></p>
+            {% if rfid_value %}
+                <p>RFID Tag UID: <span id="rfid-value">{{rfid_value}}</span></p>
             {% else %}
                 <p>No RFID tag detected.</p>
             {% endif %}
         </div>
+        <h1>Real-Time RFID Display</h1>
+        <div id="rfid-value"></div>
     
         <br>
         <a href="patient_info.html" class="btn-get-started">Prescription</a>
         <a href="add_patient.html" class="btn-get-started">Add Patient</a>
-        <!-- Add any dashboard content here -->
+        <!-- Real-Time RFID Display -->
+        
     </section>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Function to fetch RFID UID data from the server and update UI
-            function fetchRFIDUID() {
-                $.ajax({
-                    url: '/get_rfid_data',  // Flask route to fetch RFID UID data
-                    type: 'GET',
-                    success: function(data) {
-                        if (data.tag_uid !== null) {
-                            $('#rfid-value').text(data.tag_uid);  // Update the RFID Tag UID display
-                        }
-                    },
-                    error: function(error) {
-                        console.log('Error fetching RFID UID:', error);
-                    }
-                });
-            }
-    
-            // Fetch RFID UID data periodically (adjust interval as needed)
-            setInterval(fetchRFIDUID, 1000);  // Update every 1 second
-        });
-    </script>
-    
 
+    <!-- Socket.IO script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+            console.log('Socket.IO connected:', socket);
+
+            // Event handler for receiving RFID updates
+            socket.on('rfid_update', function(data) {
+                console.log('Received RFID update:', data);
+                document.getElementById('rfid-value').innerText = 'RFID Tag UID: ' + data.tag_uid;
+            });
+    </script>
 
     <!-- ======= Footer ======= -->
     <footer id="footer">
@@ -73,7 +63,5 @@
         </div>
     </footer>
     <!-- End Footer -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
 </body>
 </html>
