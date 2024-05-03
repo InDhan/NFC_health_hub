@@ -5,7 +5,7 @@ import time
 from templates.assets.logic.login import authenticate_user
 from flask_socketio import SocketIO
 from prescription import update_prescription,fetch_prescriptions
-#from flask_socketio import SocketIO
+from flask_socketio import SocketIO
 
 # Initialize Flask app and SocketIO
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
