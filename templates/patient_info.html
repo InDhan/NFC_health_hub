@@ -6,6 +6,19 @@
     <title>Update Patient Information - NFC Health Hub</title>
     <link href="assets/css/style.css" rel="stylesheet">
     <!-- Add any additional meta tags, stylesheets, or scripts here -->
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container img {
+            margin-right: 20px; /* Adjust the margin as needed */
+        }
+        .patient-data {
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
     <header id="header" class="header-scrolled">
@@ -14,9 +27,9 @@
         </div>
     </header>
 
-    <section id="update-patient" style="text-align: center;">
-        <h1>Update Patient Prescription</h1>
-        <form action="/patient_info" method="POST">
+    <section id="update-patient" >
+        <h1 style="text-align: center;" >Enter Patient ID</h1>
+        <form action="/patient_info" method="POST" style="text-align: center;">
             <label for="patientID">Patient ID:</label>
             <input type="text" id="patientID" name="patientID" required>
             <button type="submit">Submit</button>
@@ -24,41 +37,40 @@
     
         {% if prescriptions %}
         <div class="container">
-            <h2>Prescriptions for Patient ID or UID: {{ patientID }}</h2>
-            <ul>
+            <!-- <ul>
                 {% for prescription in prescriptions %}
                 <li>{{ prescription }}</li>
                 {% endfor %}
-            </ul>
-    
-            <h2>Patient Information</h2>
+            </ul> -->
             <ul>
+                <h2>Medical Records of Patient ID or UID: {{ patientID }}</h2>
                 {% for patient in prescriptions %}
-                <li>
-                    <h3>{{ patient.patient_name }}</h3>
-                    <ul>
-                        <li>Patient ID: {{ patient.patient_id }}</li>
-                        <li>Doctor: {{ patient.doc_name }}</li>
-                        <li>Last Visit Date: {{ patient.last_date_visit }}</li>
-                        <li>Age: {{ patient.age }}</li>
-                        <li>Blood Group: {{ patient.blood_group }}</li>
-                        <li>Gender: {{ patient.gender }}</li>
-                        <li>Glucose: {{ patient.glucose }}</li>
-                        <li>Blood Pressure: {{ patient.bp }}</li>
-                        <li>Insulin: {{ patient.insulin }}</li>
-                        <li>Body Mass Index: {{ patient.bmi }}</li>
-                        <li>Diagnosed Disease: {{ patient.diagnosed_disease }}</li>
-                        <li>Last Prescription: {{ patient.last_prescription }}</li>
-                    </ul>
-                </li>
+                    <h2 style="color: #ffb200;">Patient: {{ patient.patient_name }}</h2>
+                    
+                        <p>Patient ID: {{ patient.patient_id }}</p>
+                        <!-- <li>NFC UID: {{ patient.uid }}</li> -->
+                        <p>Doctor: {{ patient.doc_name }}</p>
+                        <p>Last Visit Date: {{ patient.last_date_visit }}</p>
+                        <p>Age: {{ patient.age }}</p>
+                        <p>Blood Group: {{ patient.blood_group }}</p>
+                        <p>Gender: {{ patient.gender }}</p>
+                        <p>Glucose: {{ patient.glucose }}</p>
+                        <p>Blood Pressure: {{ patient.bp }}</p>
+                        <p>Insulin: {{ patient.insulin }}</p>
+                        <p>Body Mass Index: {{ patient.bmi }}</p>
+                        <pp>Diagnosed Disease: {{ patient.diagnosed_disease }}</p>
+                        <p>Last Prescription: {{ patient.last_prescription }}</p>
+                    
+                
                 {% endfor %}
+                <form id="updateForm" onsubmit="updatePrescription(); return false;">
+                    <label for="newPrescription">Enter new prescription:</label>
+                    <input type="text" id="newPrescription" name="newPrescription" required>
+                    <button type="submit">Update Prescription</button>
+                </form>
             </ul>
-            
-            <form id="updateForm" onsubmit="updatePrescription(); return false;">
-                <label for="newPrescription">Enter new prescription:</label>
-                <input type="text" id="newPrescription" name="newPrescription" required>
-                <button type="submit">Update Prescription</button>
-            </form>
+            <br>
+            <img src="assets/prescription.gif" style="scale: 80%;"><br>
         </div>
         {% else %}
         <p>No patient data found.</p>
