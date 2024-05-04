@@ -18,14 +18,47 @@
         .patient-data {
             width: 50%;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 150px; /* Adjust the height as needed */
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .modal-content button {
+            display: block;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <header id="header" class="header-scrolled">
         <div class="logo">
-            <h1><a href="#">NFC Health Hub</a></h1>
+            <h1 style="display: inline;padding-left: 600px;"><a href="#">NFC Health Hub</a></h1>
+            <p style="display: inline; padding-left: 500px;"><a href="/dashboard">Home</a></p>
         </div>
     </header>
+    
 
     <section id="update-patient" >
         <h1 style="text-align: center;" >Enter Patient ID</h1>
@@ -60,17 +93,32 @@
                         <p>Body Mass Index: {{ patient.bmi }}</p>
                         <pp>Diagnosed Disease: {{ patient.diagnosed_disease }}</p>
                         <p>Last Prescription: {{ patient.last_prescription }}</p>
-                    
-                
+                        <!-- <p>ECG Recording : {{ patient.ecg_sample }}</p> -->
+
+                        <div id="myModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <h2>Update {{patient.patient_name}} Prescriptions</h2>
+                                <textarea id="multiplePrescriptions" placeholder="Enter multiple prescriptions by placing ','
+ex: (1) Dolo 650 mg X 5 Days (0-0-0), 
+    (2) Ofloxacin and ornidazole X 3 Days (0-0-0) "></textarea>
+                                <button id="submitMultiplePrescriptions">Submit Prescriptions</button>
+                            </div>
+                        </div>
+   
                 {% endfor %}
-                <form id="updateForm" onsubmit="updatePrescription(); return false;">
-                    <label for="newPrescription">Enter new prescription:</label>
-                    <input type="text" id="newPrescription" name="newPrescription" required>
-                    <button type="submit">Update Prescription</button>
-                </form>
+                <button id="openModalBtn">Update Prescription</button>
+                
             </ul>
             <br>
             <img src="assets/prescription.gif" style="scale: 80%;border-radius: 25px;"><br>
+        </div>
+        <div style="text-align: center;">
+            {% for patient in prescriptions %}
+            <h3>ECG Record of {{ patient.patient_name }}</h3>
+            <img src="{{patient.ecg_sample}}" alt="Not avaliable" style="scale: 80%;border-radius: 25px;">
+            
+            {% endfor %}
         </div>
 
         {% else %}
@@ -80,17 +128,16 @@
         <div id="message"></div>
     </section>
 
+    <!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="container">
             <div class="copyright">
-                &copy; Copyright <strong style="font-family: 'Eras ITC', sans-serif">Harshal Jain, Murtaza, Utkarsh Jyotishi</strong>.
+                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza Sogiyawala, Utkarsh Jyotishi</strong>.
                 All Rights Reserved
-            </div>
-            <div class="credits">
-                Designed For <a href="#jdm/JDM.html"><strong>Minor Project</strong></a>
             </div>
         </div>
     </footer>
+    <!-- End Footer -->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -117,6 +164,106 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("openModalBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Handle submit button inside the modal
+    document.getElementById("submitMultiplePrescriptions").onclick = function() {
+        var prescriptions = document.getElementById("multiplePrescriptions").value;
+        // Handle saving multiple prescriptions to Google Sheets or perform other actions
+        console.log("Prescriptions:", prescriptions);
+        modal.style.display = "none"; // Close the modal after submission
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const updatePrescriptionBtn = document.querySelector('.open-modal-btn');
+        const modal = document.getElementById('myModal');
+        const closeModal = document.querySelector('.close');
+        const submitPrescriptionsBtn = document.getElementById('submitMultiplePrescriptions');
+        const messageDiv = document.getElementById('message');
+
+        // Function to show a toaster message
+        function showToast(message, success = true) {
+            messageDiv.innerHTML = `<div class="toast ${success ? 'success' : 'error'}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // Event listener for Update Prescription button
+        updatePrescriptionBtn.addEventListener('click', function () {
+            const patientName = this.getAttribute('data-patient-name');
+            document.getElementById('modal-title').innerText = `Update ${patientName} Prescription`;
+            modal.style.display = 'block';
+        });
+
+        // Event listener for Close button in modal
+        closeModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        // Event listener for Submit Prescriptions button in modal
+        submitPrescriptionsBtn.addEventListener('click', function () {
+            const newPrescriptions = document.getElementById('multiplePrescriptions').value.trim();
+            const patientID = document.getElementById('patientID').value.trim();
+
+            if (newPrescriptions && patientID) {
+                fetch('/update_prescription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patientID: patientID,
+                        new_prescription: newPrescriptions,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            showToast('Prescription updated successfully.', true);
+                            modal.style.display = 'none';
+                        } else {
+                            showToast('Failed to update prescription. Please try again.', false);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error updating prescription:', error);
+                        showToast('An error occurred while updating prescription.', false);
+                    });
+            } else {
+                showToast('Please enter both Patient ID and new prescription.', false);
+            }
+        });
+    });
+</script>
+
 
     <!-- Add any additional scripts here, if needed -->
 </body>
