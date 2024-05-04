@@ -3,82 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NFC Health Hub</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Patient Information - NFC Health Hub</title>
     <link href="assets/css/style.css" rel="stylesheet">
     <!-- Add any additional meta tags, stylesheets, or scripts here -->
 </head>
 <body>
-    <h1>Patient Prescription</h1>
-    <div id="prescription"></div>
-    <input type="text" id="newPrescription" placeholder="Enter new prescription">
-    <button onclick="updatePrescription()">Update Prescription</button>
+    <header id="header" class="header-scrolled">
+        <div class="logo">
+            <h1><a href="#">NFC Health Hub</a></h1>
+        </div>
+    </header>
 
-    <script>
-        function fetchPrescriptionAndUpdate(idValue) {
-            fetch(`/prescriptions?id_value=${idValue}`)
-                .then(response => response.json())
-                .then(data => {
-                    const prescriptionDiv = document.getElementById("prescription");
-                    prescriptionDiv.innerHTML = "";
-                    if (data.prescriptions.length > 0) {
-                        prescriptionDiv.innerHTML = data.prescriptions.join('<br>');
-                    } else {
-                        prescriptionDiv.innerHTML = "No prescription found.";
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
+    <section id="update-patient" style="text-align: center;">
+        <h1>Update Patient Prescription</h1>
+        <form action="/patient_info" method="POST">
+            <label for="patientID">Patient ID:</label>
+            <input type="text" id="patientID" name="patientID" required>
+            <button type="submit">Submit</button>
+        </form>
+    
+        {% if prescriptions %}
+        <div class="container">
+            <h2>Prescriptions for Patient ID or UID: {{ patientID }}</h2>
+            <ul>
+                {% for prescription in prescriptions %}
+                <li>{{ prescription }}</li>
+                {% endfor %}
+            </ul>
+    
+            <h2>Patient Information</h2>
+            <ul>
+                {% for patient in prescriptions %}
+                <li>
+                    <h3>{{ patient.patient_name }}</h3>
+                    <ul>
+                        <li>Patient ID: {{ patient.patient_id }}</li>
+                        <li>Doctor: {{ patient.doc_name }}</li>
+                        <li>Last Visit Date: {{ patient.last_date_visit }}</li>
+                        <li>Age: {{ patient.age }}</li>
+                        <li>Blood Group: {{ patient.blood_group }}</li>
+                        <li>Gender: {{ patient.gender }}</li>
+                        <li>Glucose: {{ patient.glucose }}</li>
+                        <li>Blood Pressure: {{ patient.bp }}</li>
+                        <li>Insulin: {{ patient.insulin }}</li>
+                        <li>Body Mass Index: {{ patient.bmi }}</li>
+                        <li>Diagnosed Disease: {{ patient.diagnosed_disease }}</li>
+                        <li>Last Prescription: {{ patient.last_prescription }}</li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <form id="updateForm" onsubmit="updatePrescription(); return false;">
+                <label for="newPrescription">Enter new prescription:</label>
+                <input type="text" id="newPrescription" name="newPrescription" required>
+                <button type="submit">Update Prescription</button>
+            </form>
+        </div>
+        {% else %}
+        <p>No patient data found.</p>
+        {% endif %}
+    
+        <div id="message"></div>
+    </section>
 
-        function updatePrescription() {
-            const idValue = prompt("Enter Patient ID or UID:");
-            if (idValue) {
-                const newPrescription = document.getElementById("newPrescription").value;
-                if (newPrescription) {
-                    fetch('/update_prescription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ id_value: idValue, new_prescription: newPrescription })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                        if (data.success) {
-                            alert("Prescription updated successfully!");
-                            fetchPrescriptionAndUpdate(idValue); // Fetch and display updated prescription
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                } else {
-                    alert("Please enter a new prescription.");
-                }
-            }
-        }
-
-        const idValue = prompt("Enter Patient ID or UID:");
-        if (idValue) {
-            fetchPrescriptionAndUpdate(idValue);
-        }
-    </script>
-   
-   
-    <section>
     <footer id="footer">
         <div class="container">
             <div class="copyright">
-                &copy; Copyright <strong style="font-family: Eras ITC">Harshal Jain, Murtaza , Utkarsh Jyotishi</strong>.
+                &copy; Copyright <strong style="font-family: 'Eras ITC', sans-serif">Harshal Jain, Murtaza, Utkarsh Jyotishi</strong>.
                 All Rights Reserved
             </div>
             <div class="credits">
                 Designed For <a href="#jdm/JDM.html"><strong>Minor Project</strong></a>
             </div>
-        <!-- </div>
+        </div>
     </footer>
-    </section>  -->
-    < End Footer>
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <script>
+        function updatePrescription() {
+            const patientID = document.getElementById("patientID").value;
+            const newPrescription = document.getElementById("newPrescription").value;
+            
+            fetch('/patient_info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ patientID: patientID, newPrescription: newPrescription })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById("message");
+                messageDiv.textContent = data.message;
+                if (data.success) {
+                    messageDiv.innerHTML += "<br>Updated Prescription: " + newPrescription + "<br>Prescription updated successfully.";
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    <!-- Add any additional scripts here, if needed -->
 </body>
 </html>
