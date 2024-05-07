@@ -5,10 +5,19 @@ import time
 from flask_socketio import SocketIO
 from templates.assets.logic.login import authenticate_user  # Import authenticate_user if needed
 from prescription import fetch_prescriptions, update_prescription
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # Initialize Flask app and SocketIO
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
 socketio = SocketIO(app)
+
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("keys.json", scope)
+client = gspread.authorize(creds)
+
+# Replace "YOUR_GOOGLE_SHEET_ID" with the actual ID of your Google Sheet
+sheet = client.open_by_key("1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY").sheet1
 
 # Global variables
 ser = None  # Serial port variable
@@ -132,25 +141,23 @@ def patient_info():
         # Render the patient_info.html template for GET requests
         return render_template('patient_info.html', patientID=None, prescriptions=None)
 
-# Route to update patient prescription
+# Route to update patient pr
 @app.route('/update_prescription', methods=['POST'])
-def update_prescription_route():
-    # Check if 'patientID' and 'new_prescription' are in the form data
-    if 'patientID' not in request.form or 'new_prescription' not in request.form:
-        return jsonify({"error": "Patient ID or new prescription not provided."}), 400
+def update_prescription():
+    data = request.get_json()
+    patient_id = data.get('patientID')
+    new_prescription = data.get('newPrescription')
 
-    # Get patient ID and new prescription from the form data
-    patient_id = request.form['patientID']
-    new_prescription = request.form['new_prescription']
+    # Assuming prescription needs to be added to column 14
+    col_num = 14
 
-    # Call the update_prescription function
-    updated_prescription = update_prescription(patient_id, new_prescription)
+    # Find the row corresponding to the patient ID
+    row = sheet.find(patient_id).row
 
-    # Handle the response based on the result of the update
-    if updated_prescription:
-        return jsonify({'success': True, 'message': 'Prescription updated successfully.'})
-    else:
-        return jsonify({'success': False, 'message': 'Failed to update prescription.'})
+    # Update the prescription in the corresponding cell
+    sheet.update_cell(row, col_num, new_prescription)
+
+    return jsonify({'success': True})
 
 if __name__ == '__main__':
     start_nfc_thread()

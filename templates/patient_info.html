@@ -143,11 +143,11 @@ ex: (1) Dolo 650 mg X 5 Days (0-0-0),
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <script>
-        function updatePrescription() {
-            const patientID = document.getElementById("patientID").value;
-            const newPrescription = document.getElementById("newPrescription").value;
-            
-            fetch('/patient_info', {
+           // JavaScript code for handling prescription update
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to update prescription via AJAX
+        function updatePrescription(patientID, newPrescription) {
+            fetch('/update_prescription', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,14 +156,28 @@ ex: (1) Dolo 650 mg X 5 Days (0-0-0),
             })
             .then(response => response.json())
             .then(data => {
-                const messageDiv = document.getElementById("message");
-                messageDiv.textContent = data.message;
                 if (data.success) {
-                    messageDiv.innerHTML += "<br>Updated Prescription: " + newPrescription + "<br>Prescription updated successfully.";
+                    alert('Prescription updated successfully.');
+                    // Optionally, update the UI or perform any additional actions
+                } else {
+                    alert('Failed to update prescription.');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error updating prescription:', error);
+                alert('An error occurred while updating prescription.');
+            });
         }
+
+        // Event listener for the "Update Prescription" button
+        document.getElementById('openModalBtn').addEventListener('click', function () {
+            const patientID = document.getElementById('patientID').value;
+            const newPrescription = document.getElementById('multiplePrescriptions').value;
+            
+            // Call function to update prescription
+            updatePrescription(patientID, newPrescription);
+        });
+    });
     </script>
 
 <script>
