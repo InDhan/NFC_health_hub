@@ -22,14 +22,7 @@
         </div>
         <br>
         <!-- RFID Tag UID display -->
-        <div>
-            <h1>RFID Tag Information</h1>
-            {% if rfid_value %}
-                <p>RFID Tag UID: <span id="rfid-value">{{rfid_value}}</span></p>
-            {% else %}
-                <p>No RFID tag detected.</p>
-            {% endif %}
-        </div>
+        <p>RFID UID: {{ rfid_uid }}</p>
         <div id="rfid-value"></div>
     
         <br>

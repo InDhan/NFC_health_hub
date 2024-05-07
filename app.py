@@ -42,10 +42,16 @@ def read_rfid():
         if ser is not None and ser.is_open:
             # Read data from the Arduino
             data = ser.readline().strip().decode('utf-8')
+            print("Raw data:", data)  # Debug print to see the raw data received
             if data.startswith('Patient RFID: Card UID:'):
                 rfid_uid = data.split(': ')[-1].strip()  # Extract the RFID UID from the data
-                print("Patient RFID:", rfid_uid)
+                print("Patient RFID:", rfid_uid)  # Debug print RFID UID to the terminal
+                # Emit the RFID UID via SocketIO
+                socketio.emit('rfid_update', {'tag_uid': rfid_uid})
+        else:
+            print("Serial port is not open.")  # Debug print if serial port is not open
         time.sleep(0.1)  # Adjust delay as needed
+
 
 # SocketIO event handler for RFID data
 @socketio.on('rfid_data')
