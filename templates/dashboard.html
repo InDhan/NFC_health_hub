@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - NFC Health Hub</title>
     <link href="assets/css/style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('nfc_update', function(data) {
+            document.getElementById('nfc_uid').innerText = data.tag_uid;
+        });
+    </script>
 </head>
+
 <body>
     <header id="header" class="header-scrolled">
         <div class="logo">
@@ -21,14 +29,13 @@
             Tap Patient Card
         </div>
         <br>
-        <!-- RFID Tag UID display -->
-        <p>RFID UID: {{ rfid_uid }}</p>
-        <div id="rfid-value"></div>
+        <!-- NFC Tag UID display -->
+        <p>NFC UID: <span id="nfc_uid"></span></p>
     
         <br>
         <a href="/patient_info" class="btn-get-started">Prescription</a>
         <a href="add_patient.html" class="btn-get-started">Add Patient</a>
-        <!-- Real-Time RFID Display -->
+        <!-- Real-Time NFC Display -->
         
     </section>
 

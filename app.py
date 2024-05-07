@@ -12,8 +12,8 @@ socketio = SocketIO(app)
 
 # Global variables
 ser = None  # Serial port variable
-rfid_uid = None  # RFID UID variable
-prev_rfid_uid = None  # Previous RFID UID variable
+nfc_uid = None  # NFC UID variable
+prev_nfc_uid = None  # Previous NFC UID variable
 
 # Function to find and open the serial port
 def find_and_open_serial_port():
@@ -35,44 +35,44 @@ def find_and_open_serial_port():
     # Return None if no suitable port is found
     return None
 
-# Function to read RFID data from the Arduino
-def read_rfid():
-    global ser, rfid_uid
+# Function to read NFC data from the Arduino
+def read_nfc():
+    global ser, nfc_uid
     while True:
         if ser is not None and ser.is_open:
             # Read data from the Arduino
             data = ser.readline().strip().decode('utf-8')
             print("Raw data:", data)  # Debug print to see the raw data received
-            if data.startswith('Patient RFID: Card UID:'):
-                rfid_uid = data.split(': ')[-1].strip()  # Extract the RFID UID from the data
-                print("Patient RFID:", rfid_uid)  # Debug print RFID UID to the terminal
-                # Emit the RFID UID via SocketIO
-                socketio.emit('rfid_update', {'tag_uid': rfid_uid})
+            if data.startswith('Patient NFC: Card UID:'):
+                nfc_uid = data.split(': ')[-1].strip()  # Extract the NFC UID from the data
+                print("Patient NFC:", nfc_uid)  # Debug print NFC UID to the terminal
+                # Emit the NFC UID via SocketIO
+                socketio.emit('nfc_update', {'tag_uid': nfc_uid})
         else:
             print("Serial port is not open.")  # Debug print if serial port is not open
         time.sleep(0.1)  # Adjust delay as needed
 
 
-# SocketIO event handler for RFID data
-@socketio.on('rfid_data')
-def handle_rfid_data(data):
-    global rfid_uid
-    rfid_uid = data['tag_uid']  # Assuming 'tag_uid' is the key for RFID UID in the data
-    socketio.emit('rfid_update', {'tag_uid': rfid_uid})
+# SocketIO event handler for NFC data
+@socketio.on('nfc_data')
+def handle_nfc_data(data):
+    global nfc_uid
+    nfc_uid = data['tag_uid']  # Assuming 'tag_uid' is the key for NFC UID in the data
+    socketio.emit('nfc_update', {'tag_uid': nfc_uid})
 
-# Function to start the RFID reading thread
-def start_rfid_thread():
+# Function to start the NFC reading thread
+def start_nfc_thread():
     global ser
     ser = find_and_open_serial_port()
     if ser is None:
         print("Error: No available serial port found!")
     else:
         print("Serial port opened successfully.")
-        # Start a new thread to run the RFID reader function
-        rfid_thread = threading.Thread(target=read_rfid)
-        rfid_thread.daemon = True
-        rfid_thread.start()
-        print("RFID thread started.")  # Debug print
+        # Start a new thread to run the NFC reader function
+        nfc_thread = threading.Thread(target=read_nfc)
+        nfc_thread.daemon = True
+        nfc_thread.start()
+        print("NFC thread started.")  # Debug print
 
 # Routes
 
@@ -95,16 +95,20 @@ def login_page():
 # Dashboard route
 @app.route('/dashboard')
 def dashboard():
-    global rfid_uid
-    return render_template('dashboard.html', rfid_tag="RFID Tag UID:", rfid_value=rfid_uid)
+    global nfc_uid
+    return render_template('dashboard.html', nfc_tag="NFC Tag UID:", nfc_value=nfc_uid)
 
-# API endpoint to fetch RFID data
-@app.route('/get_rfid_data', methods=['GET'])
-def get_rfid_data():
-    global prev_rfid_uid, rfid_uid
-    if rfid_uid != prev_rfid_uid:
-        prev_rfid_uid = rfid_uid
-        return jsonify({"tag_uid": str(rfid_uid)})
+def nfc_data():
+    global nfc_uid
+    return render_template('nfc_data.html', nfc_uid=nfc_uid)
+    
+# API endpoint to fetch NFC data
+@app.route('/get_nfc_data', methods=['GET'])
+def get_nfc_data():
+    global prev_nfc_uid, nfc_uid
+    if nfc_uid != prev_nfc_uid:
+        prev_nfc_uid = nfc_uid
+        return jsonify({"tag_uid": str(nfc_uid)})
     else:
         return jsonify({"tag_uid": None})
 
@@ -149,5 +153,5 @@ def update_prescription_route():
         return jsonify({'success': False, 'message': 'Failed to update prescription.'})
 
 if __name__ == '__main__':
-    start_rfid_thread()
+    start_nfc_thread()
     socketio.run(app, debug=True)
