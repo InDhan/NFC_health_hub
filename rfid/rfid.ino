@@ -3,6 +3,7 @@
 
 #define RST_PIN 9  // Define the RST_PIN (reset pin) for the RC522 module
 #define SS_PIN 10  // Define the SS_PIN (slave select pin) for the RC522 module
+#define LED_PIN 8  // Define the LED_PIN for the LED
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 
@@ -11,6 +12,8 @@ void setup() {
   
   SPI.begin();  // Initialize SPI communication
   mfrc522.PCD_Init();  // Initialize MFRC522 module
+
+  pinMode(LED_PIN, OUTPUT);  // Set LED_PIN as output
   
   Serial.println("MFRC522 Initialized");
 }
@@ -26,7 +29,8 @@ void loop() {
     }
     Serial.println();
 
-
+    digitalWrite(LED_PIN, HIGH);  // Turn on the LED
     delay(1000);  // Delay for readability
+    digitalWrite(LED_PIN, LOW);  // Turn off the LED
   }
 }
