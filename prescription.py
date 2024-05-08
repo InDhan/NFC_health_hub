@@ -17,8 +17,8 @@ def fetch_prescriptions(id_value):
         prescriptions = []
         headers = data[0]  # Assuming the first row contains headers
         for row in data:
-            if row[2] == id_value or row[14] == id_value:  # Assuming Patient ID is in column B (index 1) and UID is in column C (index 2)
-                patient_data = dict(zip(headers[1:15], row[1:15]))  # Exclude the UID from headers and row
+            if row[2] == id_value or row[15] == id_value:  # Assuming Patient ID is in column B (index 1) and UID is in column C (index 2)
+                patient_data = dict(zip(headers[1:16], row[1:16]))  # Exclude the UID from headers and row
                 patient_data['patient_name'] = row[2]
                 patient_data['doc_name'] = row[3]
                 patient_data['last_date_visit'] = row[4]
@@ -26,12 +26,13 @@ def fetch_prescriptions(id_value):
                 patient_data['blood_group'] = row[6]
                 patient_data['gender'] = row[7]
                 patient_data['glucose'] = row[8]
-                patient_data['bp'] = row[9]
-                patient_data['insulin'] = row[10]
-                patient_data['bmi'] = row[11]
-                patient_data['diagnosed_disease'] = row[12]
-                patient_data['last_prescription'] = row[13]
-                patient_data['ecg_sample'] = row[15]
+                patient_data['blood_group'] = row[9]
+                patient_data['bp'] = row[10]
+                patient_data['insulin'] = row[11]
+                patient_data['bmi'] = row[12]
+                patient_data['diagnosed_disease'] = row[13]
+                patient_data['last_prescription'] = row[14]
+                patient_data['ecg_sample'] = row[16]
                 prescriptions.append(patient_data)
         return prescriptions
     except Exception as e:
