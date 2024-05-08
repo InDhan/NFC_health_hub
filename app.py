@@ -5,10 +5,18 @@ import time
 from flask_socketio import SocketIO
 from templates.assets.logic.login import authenticate_user  # Import authenticate_user if needed
 from prescription import fetch_prescriptions, update_prescription
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # Initialize Flask app and SocketIO
 app = Flask(__name__, static_folder='templates/', static_url_path='/')
 socketio = SocketIO(app)
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("keys.json", scope)
+client = gspread.authorize(creds)
+
+# Replace "YOUR_GOOGLE_SHEET_ID" with the actual ID of your Google Sheet
+sheet = client.open_by_key("1FCoRib-XsrcSycRvHtEl8xYAV4KsbTXcr5ZkbkuabsY").sheet1
 
 # Global variables
 ser = None  # Serial port variable
@@ -134,24 +142,34 @@ def patient_info():
 
 # Route to update patient prescription
 @app.route('/update_prescription', methods=['POST'])
-def update_prescription_route():
-    # Check if 'patientID' and 'new_prescription' are in the form data
-    if 'patientID' not in request.form or 'new_prescription' not in request.form:
-        return jsonify({"error": "Patient ID or new prescription not provided."}), 400
+def update_prescription():
+    data = request.get_json()
+    patientID = data.get('patientID')
+    new_prescription = data.get('new_prescription')
 
-    # Get patient ID and new prescription from the form data
-    patient_id = request.form['patientID']
-    new_prescription = request.form['new_prescription']
+    # Update Google Sheet logic
+    try:
+        sheet = client.open_by_key(spreadsheet_id).sheet1
+        data = sheet.get_all_values()
+        headers = data[0]  # Assuming the first row contains headers
+        for row in data:
+            if row[2] == patientID or row[14] == patientID:  # Assuming Patient ID is in column B (index 1) and UID is in column C (index 2)
+                row[13] = new_prescription  # Assuming "last_prescription" is at index 13
+                sheet.update_row(row, index=row.row_number)  # Update the row in the Google Sheet
+                return jsonify({'success': True}), 200
+        return jsonify({'success': False, 'error': 'Patient ID not found'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-    # Call the update_prescription function
-    updated_prescription = update_prescription(patient_id, new_prescription)
 
-    # Handle the response based on the result of the update
-    if updated_prescription:
-        return jsonify({'success': True, 'message': 'Prescription updated successfully.'})
+def get_row_index(sheet, patientID):
+    values_list = sheet.col_values(1)  # Assuming patient IDs are in column 1
+    if patientID in values_list:
+        return values_list.index(patientID) + 1  # Adding 1 as Google Sheets index starts from 1
     else:
-        return jsonify({'success': False, 'message': 'Failed to update prescription.'})
+        return None
 
+                    
 if __name__ == '__main__':
     start_nfc_thread()
     socketio.run(app, debug=True)

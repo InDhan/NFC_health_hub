@@ -26,14 +26,6 @@ void loop() {
     }
     Serial.println();
 
-    // Write data to the card (if needed)
-    byte data[] = {0xDE, 0xAD, 0xBE, 0xEF};  // Example data to write
-    MFRC522::StatusCode status = mfrc522.MIFARE_Write(1, data, sizeof(data));
-    if (status == MFRC522::STATUS_OK) {
-      Serial.println("Data written to card");
-    } else {
-      Serial.println("Error writing data to card");
-    }
 
     delay(1000);  // Delay for readability
   }

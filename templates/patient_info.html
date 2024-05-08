@@ -59,8 +59,14 @@
         </div>
     </header>
     
+    
 
     <section id="update-patient" >
+        <div class="dashboard" style="text-align: center;">
+            <div id="nfc_data_container"></div>
+            <button onclick="changeNFCUID()" class="btn-get-started">Get UID</button>
+            <!-- Real-Time NFC Display -->
+        </div>
         <h1 style="text-align: center;" >Enter Patient ID</h1>
         <form action="/patient_info" method="POST" style="text-align: center;">
             <label for="patientID">Patient ID:</label>
@@ -98,7 +104,7 @@
                         <div id="myModal" class="modal">
                             <div class="modal-content">
                                 <span class="close">&times;</span>
-                                <h2>Update {{patient.patient_name}} Prescriptions</h2>
+                                <h2 id="modal-title">Update Prescription</h2>
                                 <textarea id="multiplePrescriptions" placeholder="Enter multiple prescriptions by placing ','
 ex: (1) Dolo 650 mg X 5 Days (0-0-0), 
     (2) Ofloxacin and ornidazole X 3 Days (0-0-0) "></textarea>
@@ -107,7 +113,15 @@ ex: (1) Dolo 650 mg X 5 Days (0-0-0),
                         </div>
    
                 {% endfor %}
-                <button id="openModalBtn">Update Prescription</button>
+                <!-- <button id="openModalBtn">Update Prescription</button> -->
+                <h1>Update Prescription</h1>
+                    <form id="updateForm">
+                        <label for="patientID">Patient ID:</label>
+                        <input type="text" id="patientID" name="patientID" value="{{ patientID }}" required><br>
+                        <label for="newPrescription">New Prescription:</label>
+                        <input type="text" id="newPrescription" name="newPrescription" required><br>
+                        <button type="submit">Update Prescription</button>
+                    </form>
                 
             </ul>
             <br>
@@ -128,6 +142,8 @@ ex: (1) Dolo 650 mg X 5 Days (0-0-0),
         <div id="message"></div>
     </section>
 
+    <div id="message"></div>
+
       <!-- ======= Footer ======= -->
       <section>
         <footer id="footer">
@@ -143,127 +159,59 @@ ex: (1) Dolo 650 mg X 5 Days (0-0-0),
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <script>
-        function updatePrescription() {
-            const patientID = document.getElementById("patientID").value;
-            const newPrescription = document.getElementById("newPrescription").value;
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
             
-            fetch('/patient_info', {
+            const patientID = document.getElementById('patientID').value;
+            const newPrescription = document.getElementById('newPrescription').value;
+
+            fetch('/update_prescription', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ patientID: patientID, newPrescription: newPrescription })
+                body: JSON.stringify({ patientID: patientID, new_prescription: newPrescription }),
             })
-            .then(response => response.json())
-            .then(data => {
-                const messageDiv = document.getElementById("message");
-                messageDiv.textContent = data.message;
-                if (data.success) {
-                    messageDiv.innerHTML += "<br>Updated Prescription: " + newPrescription + "<br>Prescription updated successfully.";
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update prescription');
                 }
             })
-            .catch(error => console.error('Error:', error));
-        }
+            .then(data => {
+                document.getElementById('message').textContent = data.success ? 'Prescription updated successfully' : 'Failed to update prescription';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'An error occurred while updating prescription';
+            });
+        });
     </script>
 
 <script>
-    // Get the modal
-    var modal = document.getElementById('myModal');
+    var uids = [
+        'Mohit Jha => 17 36 D5 5B',
+        'Charles Sanchez => 17 21 13 4E',
+        'Emily Spencer => E5 CC 24 D9',
+        'Patricia Rhodes => 17 36 92 4B',
+        'Mohit Jha => 17 36 D5 5B'
+    ];
+    var currentIndex = 0;
 
-    // Get the button that opens the modal
-    var btn = document.getElementById("openModalBtn");
+    function changeNFCUID() {
+        var paragraph = document.createElement("p");
+        var textNode = document.createTextNode("NFC UID: " + uids[currentIndex]);
+        paragraph.appendChild(textNode);
+        var parentElement = document.getElementById("nfc_data_container");
+        parentElement.innerHTML = ''; // Clear previous content
+        parentElement.appendChild(paragraph);
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks the button, open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Handle submit button inside the modal
-    document.getElementById("submitMultiplePrescriptions").onclick = function() {
-        var prescriptions = document.getElementById("multiplePrescriptions").value;
-        // Handle saving multiple prescriptions to Google Sheets or perform other actions
-        console.log("Prescriptions:", prescriptions);
-        modal.style.display = "none"; // Close the modal after submission
+        currentIndex = (currentIndex + 1) % uids.length; // Cycle through UID values
     }
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const updatePrescriptionBtn = document.querySelector('.open-modal-btn');
-        const modal = document.getElementById('myModal');
-        const closeModal = document.querySelector('.close');
-        const submitPrescriptionsBtn = document.getElementById('submitMultiplePrescriptions');
-        const messageDiv = document.getElementById('message');
 
-        // Function to show a toaster message
-        function showToast(message, success = true) {
-            messageDiv.innerHTML = `<div class="toast ${success ? 'success' : 'error'}">${message}</div>`;
-            setTimeout(() => {
-                messageDiv.innerHTML = '';
-            }, 3000);
-        }
 
-        // Event listener for Update Prescription button
-        updatePrescriptionBtn.addEventListener('click', function () {
-            const patientName = this.getAttribute('data-patient-name');
-            document.getElementById('modal-title').innerText = `Update ${patientName} Prescription`;
-            modal.style.display = 'block';
-        });
-
-        // Event listener for Close button in modal
-        closeModal.addEventListener('click', function () {
-            modal.style.display = 'none';
-        });
-
-        // Event listener for Submit Prescriptions button in modal
-        submitPrescriptionsBtn.addEventListener('click', function () {
-            const newPrescriptions = document.getElementById('multiplePrescriptions').value.trim();
-            const patientID = document.getElementById('patientID').value.trim();
-
-            if (newPrescriptions && patientID) {
-                fetch('/update_prescription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        patientID: patientID,
-                        new_prescription: newPrescriptions,
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            showToast('Prescription updated successfully.', true);
-                            modal.style.display = 'none';
-                        } else {
-                            showToast('Failed to update prescription. Please try again.', false);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error updating prescription:', error);
-                        showToast('An error occurred while updating prescription.', false);
-                    });
-            } else {
-                showToast('Please enter both Patient ID and new prescription.', false);
-            }
-        });
-    });
-</script>
 
 
     <!-- Add any additional scripts here, if needed -->

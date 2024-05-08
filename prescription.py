@@ -45,14 +45,16 @@ def update_prescription(id_value, new_prescription):
     try:
         sheet = client.open_by_key(spreadsheet_id).sheet1
         data = sheet.get_all_values()
-        for i, row in enumerate(data):
-            if row[1] == id_value or row[2] == id_value:  # Assuming Patient ID is in column B (index 1) and UID is in column C (index 2)
-                sheet.update_cell(i + 1, 13, new_prescription)  # Update prescription in column M (index 13)
-                return new_prescription
-        return None  # If ID/UID not found
+        headers = data[0]  # Assuming the first row contains headers
+        for row in data:
+            if row[2] == id_value or row[14] == id_value:  # Assuming Patient ID is in column B (index 1) and UID is in column C (index 2)
+                row[13] = new_prescription  # Assuming "last_prescription" is at index 13
+                sheet.update_row(row, index=row.row_number)  # Update the row in the Google Sheet
+                return True  # Return True if the prescription was updated successfully
+        return False  # Return False if no matching ID or UID is found
     except Exception as e:
         print(f"Error updating prescription: {e}")
-        return None
+        return False
 
 def main():
     id_value = input("Enter Patient ID or UID: ").strip()
